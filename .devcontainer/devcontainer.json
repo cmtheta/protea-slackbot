@@ -1,0 +1,10 @@
+{
+    "name": "Protea Slack Bot",
+    "dockerComposeFile": "./docker-compose.yml",
+    "service": "protea-slack-bot",
+    "workspaceFolder": "/workspace",
+    "extensions": [
+        "ms-python.python",
+        "kevinrose.vsc-python-indent"
+    ]
+}

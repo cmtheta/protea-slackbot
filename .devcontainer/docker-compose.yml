@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  protea-slack-bot:
+    build:
+      context: ..
+      dockerfile: ./.devcontainer/Dockerfile
+    volumes:
+      - ../:/workspace
+    tty: true
