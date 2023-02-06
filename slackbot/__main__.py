@@ -47,7 +47,7 @@ def hello(ack, say, command):
         r_get.raise_for_status()
     except Exception as e:
         logging.error(e)
-        messenger.error_massage(say, command['channel_id'])
+        messenger.error_massage(command['channel_id'])
         exit(1)
     content = r_get.json()
     say(content['message'])
