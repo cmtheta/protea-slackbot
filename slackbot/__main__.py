@@ -14,7 +14,7 @@ from .traffic_img import TrafficImg
 logging.basicConfig(
     filename="logging.log",
     level=logging.DEBUG,
-    format="[%(levelname)s] %(message)s",
+    format="(%(asctime)s)[%(levelname)s] %(message)s",
     datefmt="%m/%d/%Y %I:%M:%S %p"
 )
 
