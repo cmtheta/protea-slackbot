@@ -3,12 +3,20 @@ from slack_bolt import App
 from slack_sdk import WebClient
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
+import logging
 import requests
 import threading
 
 from .periodic_exec import PeriodicExecuter
 from .messenger import Messenger
 from .traffic_img import TrafficImg
+
+logging.basicConfig(
+    filename="logging.log",
+    level=logging.DEBUG,
+    format="[%(levelname)s] %(message)s",
+    datefmt="%m/%d/%Y %I:%M:%S %p"
+)
 
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 SLACK_APP_TOKEN = os.getenv("SLACK_APP_TOKEN")
@@ -37,8 +45,8 @@ def hello(ack, say, command):
     try:
         r_get = requests.get(url=API_SERVER_URL+"/hello", params=params)
         r_get.raise_for_status()
-    except Exception:
-        # TODO: ログ設定
+    except Exception as e:
+        logging.error(e)
         messenger.error_massage(say, command['channel_id'])
         exit(1)
     content = r_get.json()

@@ -1,5 +1,6 @@
 import requests
 import tempfile
+import logging
 
 class TrafficImg:
     def __init__(self, client, messenger,api_server_url):
@@ -11,7 +12,7 @@ class TrafficImg:
         try:
             traffc_image = self.fetch_img()
         except Exception as e:
-            # TODO: ログ設定
+            logging.error(e)
             self.messenger.error_massage(channel_id)
             exit(1)
 

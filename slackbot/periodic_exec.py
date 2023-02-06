@@ -1,12 +1,12 @@
 import schedule
 from time import sleep
+import logging
 
 from .traffic_img import TrafficImg
 
-
 class PeriodicExecuter:
     def __init__(self, channel_id, trafimg: TrafficImg) -> None:
-        print("Start up: Periodic Executer")
+        logging.info("Start up: Periodic Executer")
         self.trafimg = trafimg
         self.channel_id = channel_id
 
