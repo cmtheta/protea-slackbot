@@ -4,7 +4,10 @@ from slack_sdk import WebClient
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 import requests
-import tempfile
+import threading
+
+from .periodic_exec import PeriodicExecuter
+from .traffic_img import TrafficImg
 
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 SLACK_APP_TOKEN = os.getenv("SLACK_APP_TOKEN")
@@ -13,6 +16,15 @@ client = WebClient(token=SLACK_BOT_TOKEN)
 
 API_SERVER_DOMAIN = os.getenv("API_SERVER_DOMAIN")
 API_SERVER_URL = "http://" + API_SERVER_DOMAIN
+
+CHANNEL_ID = os.getenv("CHANNEL_ID")
+
+trafimg = TrafficImg(client, API_SERVER_URL)
+
+if CHANNEL_ID is not None:
+    run_method = PeriodicExecuter(CHANNEL_ID, trafimg).run
+    thread_periodic_executer = threading.Thread(target=run_method)
+    thread_periodic_executer.start()
 
 @app.command("/hello")
 def hello(ack, say, command):
@@ -32,29 +44,8 @@ def hello(ack, say, command):
 @app.command("/traffic_img")
 def traffic_img(ack, say, command):
     ack()
-    params = {
-        "provider" : "empty",
-        "range": "empty",
-        "area" : "empty"
-    }
-    try:
-        r_get = requests.get(url=API_SERVER_URL+"/traffic_img", params=params)
-        r_get.raise_for_status()
-    except Exception:
-        # TODO: エラー処理
-        exit(1)
 
-    traffc_image = r_get.content
-    with tempfile.NamedTemporaryFile(dir=".", delete=True) as f:
-        f.write(traffc_image)
-        filename = f.name
-        # FIXME: file_upload_v2の使用をすすめられる。2023/01/21時点でv2の情報があまりなかった。
-        client.files_upload(
-            channels=command['channel_id'],
-            file=filename,
-            initial_comment="",
-            title = "Traffic Data"
-        )
+    trafimg.return_traffic_img(command['channel_id'])
 
 
 handler = SocketModeHandler(app, SLACK_APP_TOKEN)
