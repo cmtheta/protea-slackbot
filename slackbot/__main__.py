@@ -22,6 +22,7 @@ CHANNEL_ID = os.getenv("CHANNEL_ID")
 trafimg = TrafficImg(client, API_SERVER_URL)
 
 if CHANNEL_ID is not None:
+    # 投稿先のチャンネルIDが設定されているとき、定期実行を行う
     run_method = PeriodicExecuter(CHANNEL_ID, trafimg).run
     thread_periodic_executer = threading.Thread(target=run_method)
     thread_periodic_executer.start()
