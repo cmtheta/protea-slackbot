@@ -8,11 +8,11 @@ import tempfile
 
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 SLACK_APP_TOKEN = os.getenv("SLACK_APP_TOKEN")
-
 app = App(token=SLACK_BOT_TOKEN)
 client = WebClient(token=SLACK_BOT_TOKEN)
 
-API_SERVER = "http://192.168.11.9:8000"
+API_SERVER_DOMAIN = os.getenv("API_SERVER_DOMAIN")
+API_SERVER_URL = "http://" + API_SERVER_DOMAIN
 
 @app.command("/hello")
 def hello(ack, say, command):
@@ -21,7 +21,7 @@ def hello(ack, say, command):
         "name": f"<@{command['user_id']}>"
     }
     try:
-        r_get = requests.get(url=API_SERVER+"/hello", params=params)
+        r_get = requests.get(url=API_SERVER_URL+"/hello", params=params)
         r_get.raise_for_status()
     except Exception:
         # TODO: エラー処理
@@ -38,7 +38,7 @@ def traffic_img(ack, say, command):
         "area" : "empty"
     }
     try:
-        r_get = requests.get(url=API_SERVER+"/traffic_img", params=params)
+        r_get = requests.get(url=API_SERVER_URL+"/traffic_img", params=params)
         r_get.raise_for_status()
     except Exception:
         # TODO: エラー処理
@@ -48,7 +48,7 @@ def traffic_img(ack, say, command):
     with tempfile.NamedTemporaryFile(dir=".", delete=True) as f:
         f.write(traffc_image)
         filename = f.name
-        # FIXME: file_upload_v2の使用を進められる。2023/01/21時点でv2の情報があまりなかった。
+        # FIXME: file_upload_v2の使用をすすめられる。2023/01/21時点でv2の情報があまりなかった。
         client.files_upload(
             channels=command['channel_id'],
             file=filename,
