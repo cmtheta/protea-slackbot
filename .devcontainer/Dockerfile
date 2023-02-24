@@ -9,6 +9,8 @@ ARG PASSWORD=user
 ENV PROJECT_DIR workspace
 WORKDIR /${PROJECT_DIR}
 
+ENV TZ Asia/Tokyo
+
 RUN apt update \
  && apt upgrade -y
 

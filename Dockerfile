@@ -3,6 +3,8 @@ FROM python:3.10.8-bullseye
 ENV PROJECT_DIR workspace
 WORKDIR /${PROJECT_DIR}
 
+ENV TZ Asia/Tokyo
+
 RUN apt update \
  && apt upgrade -y
 

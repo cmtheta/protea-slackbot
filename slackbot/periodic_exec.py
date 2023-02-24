@@ -11,7 +11,7 @@ class PeriodicExecuter:
         self.channel_id = channel_id
 
     def run(self):
-        schedule.every().day.at("01:33").do(self.send_traffic_img_morning)
+        schedule.every().day.at("08:00").do(self.send_traffic_img_morning)
 
         while(True):
             schedule.run_pending()
